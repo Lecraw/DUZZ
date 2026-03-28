@@ -4,9 +4,8 @@
     {
       "name": "duzz-dev",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--prefix", "duzz-landing"],
-      "port": 3000,
-      "autoPort": true
+      "runtimeArgs": ["run", "dev"],
+      "port": 3000
     }
   ]
 }
