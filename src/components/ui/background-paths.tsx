@@ -4,23 +4,22 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 
 export function FloatingPaths({ position }: { position: number }) {
-    const paths = Array.from({ length: 36 }, (_, i) => ({
+    const paths = Array.from({ length: 20 }, (_, i) => ({
         id: i,
-        d: `M-${380 - i * 5 * position} -${189 + i * 6}C-${
-            380 - i * 5 * position
-        } -${189 + i * 6} -${312 - i * 5 * position} ${216 - i * 6} ${
-            152 - i * 5 * position
-        } ${343 - i * 6}C${616 - i * 5 * position} ${470 - i * 6} ${
-            684 - i * 5 * position
-        } ${875 - i * 6} ${684 - i * 5 * position} ${875 - i * 6}`,
-        color: `rgba(15,23,42,${0.1 + i * 0.03})`,
-        width: 0.5 + i * 0.03,
+        d: `M-${380 - i * 9 * position} -${189 + i * 11}C-${
+            380 - i * 9 * position
+        } -${189 + i * 11} -${312 - i * 9 * position} ${216 - i * 11} ${
+            152 - i * 9 * position
+        } ${343 - i * 11}C${616 - i * 9 * position} ${470 - i * 11} ${
+            684 - i * 9 * position
+        } ${875 - i * 11} ${684 - i * 9 * position} ${875 - i * 11}`,
+        width: 0.4 + i * 0.025,
     }));
 
     return (
         <div className="absolute inset-0 pointer-events-none">
             <svg
-                className="w-full h-full text-slate-950 dark:text-white"
+                className="w-full h-full"
                 viewBox="0 0 696 316"
                 fill="none"
             >
@@ -29,13 +28,13 @@ export function FloatingPaths({ position }: { position: number }) {
                     <motion.path
                         key={path.id}
                         d={path.d}
-                        stroke="currentColor"
+                        stroke="rgba(59,130,246,0.5)"
                         strokeWidth={path.width}
-                        strokeOpacity={0.1 + path.id * 0.03}
-                        initial={{ pathLength: 0.3, opacity: 0.6 }}
+                        strokeOpacity={0.06 + path.id * 0.015}
+                        initial={{ pathLength: 0.3, opacity: 0.4 }}
                         animate={{
                             pathLength: 1,
-                            opacity: [0.3, 0.6, 0.3],
+                            opacity: [0.2, 0.4, 0.2],
                             pathOffset: [0, 1, 0],
                         }}
                         transition={{
