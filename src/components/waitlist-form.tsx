@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { StarButton } from "@/components/ui/star-button";
 import { trackEvent } from "@/components/analytics";
 
 interface WaitlistFormProps {
@@ -66,8 +67,8 @@ export function WaitlistForm({ compact = false }: WaitlistFormProps) {
   if (status === "success") {
     return (
       <div className="rounded-xl border border-blue-500/20 bg-blue-500/5 px-6 py-5 text-center">
-        <div className="mb-1 text-lg font-semibold text-white">{message}</div>
-        <p className="text-sm text-zinc-400">
+        <div className="mb-1 text-lg font-semibold text-zinc-900 dark:text-white">{message}</div>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">
           {count && count > 1
             ? `You're #${count} on the list.`
             : "You're one of the first."}
@@ -85,7 +86,7 @@ export function WaitlistForm({ compact = false }: WaitlistFormProps) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="h-12 flex-1 rounded-lg border-zinc-800 bg-zinc-900/80 px-4 text-white placeholder:text-zinc-500 focus-visible:ring-blue-500"
+          className="h-12 flex-1 rounded-lg border-zinc-300 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900/80 px-4 text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus-visible:ring-blue-500"
         />
         {/* Honeypot */}
         <input
@@ -97,13 +98,15 @@ export function WaitlistForm({ compact = false }: WaitlistFormProps) {
           autoComplete="off"
           style={{ position: "absolute", left: "-9999px", opacity: 0 }}
         />
-        <Button
+        <StarButton
           type="submit"
           disabled={status === "loading"}
-          className="h-12 rounded-lg bg-blue-600 px-6 font-semibold text-white hover:bg-blue-500 disabled:opacity-50"
+          lightColor="#3B82F6"
+          duration={2.5}
+          className="h-12 px-6 font-semibold rounded-full"
         >
           {status === "loading" ? "Joining..." : "Join Waitlist"}
-        </Button>
+        </StarButton>
         {status === "error" && (
           <p className="text-sm text-red-400 sm:absolute sm:top-full sm:mt-2">{message}</p>
         )}
@@ -120,28 +123,28 @@ export function WaitlistForm({ compact = false }: WaitlistFormProps) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="h-12 rounded-lg border-zinc-800 bg-zinc-900/80 px-4 text-white placeholder:text-zinc-500 focus-visible:ring-blue-500"
+          className="h-12 rounded-lg border-zinc-300 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900/80 px-4 text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus-visible:ring-blue-500"
         />
         <Input
           type="text"
           placeholder="Name (optional)"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="h-12 rounded-lg border-zinc-800 bg-zinc-900/80 px-4 text-white placeholder:text-zinc-500 focus-visible:ring-blue-500"
+          className="h-12 rounded-lg border-zinc-300 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900/80 px-4 text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus-visible:ring-blue-500"
         />
         <Input
           type="text"
           placeholder="School (optional)"
           value={school}
           onChange={(e) => setSchool(e.target.value)}
-          className="h-12 rounded-lg border-zinc-800 bg-zinc-900/80 px-4 text-white placeholder:text-zinc-500 focus-visible:ring-blue-500"
+          className="h-12 rounded-lg border-zinc-300 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900/80 px-4 text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus-visible:ring-blue-500"
         />
         <Input
           type="text"
           placeholder="Event interest (optional)"
           value={eventInterest}
           onChange={(e) => setEventInterest(e.target.value)}
-          className="h-12 rounded-lg border-zinc-800 bg-zinc-900/80 px-4 text-white placeholder:text-zinc-500 focus-visible:ring-blue-500"
+          className="h-12 rounded-lg border-zinc-300 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900/80 px-4 text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus-visible:ring-blue-500"
         />
       </div>
       {/* Honeypot */}
@@ -154,13 +157,15 @@ export function WaitlistForm({ compact = false }: WaitlistFormProps) {
         autoComplete="off"
         style={{ position: "absolute", left: "-9999px", opacity: 0 }}
       />
-      <Button
+      <StarButton
         type="submit"
         disabled={status === "loading"}
-        className="h-12 w-full rounded-lg bg-blue-600 px-8 text-base font-semibold text-white hover:bg-blue-500 disabled:opacity-50"
+        lightColor="#3B82F6"
+        duration={2.5}
+        className="h-12 w-full px-8 text-base font-semibold rounded-full"
       >
         {status === "loading" ? "Joining..." : "Join the Waitlist"}
-      </Button>
+      </StarButton>
       {status === "error" && <p className="text-center text-sm text-red-400">{message}</p>}
       {count !== null && count > 0 && (
         <p className="text-center text-sm text-zinc-500">

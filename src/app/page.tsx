@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
+import { motion } from "framer-motion";
+import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import dynamic from "next/dynamic";
@@ -18,10 +20,12 @@ import {
   TrendingUp,
   ArrowRight,
 } from "lucide-react";
+import React from "react";
 import { Navbar } from "@/components/navbar";
 import { WaitlistForm } from "@/components/waitlist-form";
 import { Logo } from "@/components/logo";
-import { BackgroundPaths } from "@/components/ui/background-paths";
+import { StarButton } from "@/components/ui/star-button";
+import { testimonials } from "@/lib/testimonials-data";
 
 const RotatingGlobe = dynamic(
   () => import("@/components/ui/wireframe-dotted-globe"),
@@ -149,10 +153,13 @@ function Hero() {
         0.07
       );
 
+      // Set initial z for cover stacking (above all pages when closed)
+      gsap.set(coverRef.current, { z: 6 });
+
       // Phase 2 (0.30–0.60): Open the cover
       scrollTl.to(
         coverRef.current,
-        { rotateY: -160, duration: 0.3, ease: "power2.inOut" },
+        { rotateY: -160, z: 6, duration: 0.3, ease: "power2.inOut" },
         0.30
       );
 
@@ -186,59 +193,51 @@ function Hero() {
       ref={sectionRef}
       className="relative min-h-screen flex items-center overflow-hidden"
     >
-      <BackgroundPaths />
-
-      <div
-        className="absolute top-1/3 left-1/4 w-[600px] h-[600px] rounded-full pointer-events-none"
-        style={{ background: "radial-gradient(ellipse, rgba(59,130,246,0.06) 0%, transparent 70%)" }}
-        aria-hidden="true"
-      />
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center gap-12 md:gap-20 pt-24 pb-12">
         {/* Left: Text */}
         <div ref={textRef} className="flex-1">
-          <div className="animate-[fadeInUp_1s_0.2s_both]">
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-none">
-              <span className="block text-white">Win DECA.</span>
-            </h1>
-            <p
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight mt-2"
-              style={{
-                background: "linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.2) 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                lineHeight: 1.1,
-              }}
-            >
-              Don&apos;t just compete.
-            </p>
+          <div className="animate-[fadeInUp_0.8s_0.2s_both] mb-6">
+            <span className="section-badge">
+              <Zap className="w-3.5 h-3.5" />
+              AI-Powered DECA Prep
+            </span>
           </div>
 
-          <p className="max-w-md text-base sm:text-lg text-zinc-400 leading-relaxed font-light mt-8 animate-[fadeInUp_0.8s_0.6s_both]">
+          <div className="animate-[fadeInUp_1s_0.3s_both]">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[0.95]">
+              <span className="block text-zinc-900 dark:text-white">Win DECA.</span>
+              <span className="block text-zinc-300 dark:text-zinc-600 mt-1">Don&apos;t just compete.</span>
+            </h1>
+          </div>
+
+          <p className="max-w-md text-base sm:text-lg text-zinc-500 dark:text-[rgba(255,255,255,0.55)] leading-relaxed mt-8 animate-[fadeInUp_0.8s_0.6s_both]">
             AI roleplay practice, project builders, and analytics — built for DECA competitors.
           </p>
 
-          <div className="mt-8 animate-[fadeInUp_0.7s_0.8s_both]">
-            <a
-              href="#waitlist-section"
-              className="group inline-flex items-center gap-2 rounded-full bg-blue-600 px-8 py-4 text-base font-semibold text-white transition-all hover:bg-blue-500 hover:shadow-[0_0_40px_rgba(59,130,246,0.3)]"
+          <div className="mt-10 animate-[fadeInUp_0.7s_0.8s_both]">
+            <StarButton
+              href="/waitlist"
+              lightColor="#3B82F6"
+              lightWidth={130}
+              duration={2.5}
+              className="h-12 px-8 text-base font-semibold rounded-full"
             >
-              Join the Waitlist
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
-            </a>
+              Join the Waitlist <ArrowRight className="w-4 h-4 ml-1 inline-block opacity-70" />
+            </StarButton>
           </div>
 
-          <div className="flex items-center gap-8 mt-12 animate-[fadeInUp_0.6s_1s_both]">
+          <div className="flex items-center gap-8 mt-14 animate-[fadeInUp_0.6s_1s_both]">
             {[
               { value: "500+", label: "Students" },
               { value: "15+", label: "Events" },
               { value: "98th", label: "Percentile" },
             ].map((s, i) => (
               <div key={s.label} className="flex items-center gap-8">
-                {i > 0 && <div className="w-px h-8 bg-zinc-800 -ml-8" />}
+                {i > 0 && <div className="w-px h-8 bg-zinc-200 dark:bg-white/[0.06] -ml-8" />}
                 <div>
-                  <div className="text-2xl font-bold text-white tabular-nums">{s.value}</div>
-                  <div className="text-xs text-zinc-500 uppercase tracking-wider mt-0.5">{s.label}</div>
+                  <div className="text-2xl font-bold text-zinc-900 dark:text-white tabular-nums">{s.value}</div>
+                  <div className="text-[11px] text-zinc-400 dark:text-[rgba(255,255,255,0.4)] uppercase tracking-widest mt-0.5">{s.label}</div>
                 </div>
               </div>
             ))}
@@ -248,9 +247,34 @@ function Hero() {
         {/* Right: Notebook */}
         <div
           ref={notebookWrapperRef}
-          className="flex-1 flex justify-center md:justify-end"
+          className="flex-1 flex justify-center md:justify-end relative"
           style={{ perspective: "2000px" }}
         >
+          {/* Spotlight effect */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              top: "-40%",
+              right: "5%",
+              width: "500px",
+              height: "700px",
+              background: "radial-gradient(ellipse at center, rgba(59,130,246,0.12) 0%, rgba(59,130,246,0.04) 35%, transparent 70%)",
+              filter: "blur(30px)",
+            }}
+            aria-hidden="true"
+          />
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              top: "-20%",
+              right: "15%",
+              width: "300px",
+              height: "400px",
+              background: "radial-gradient(ellipse at center, rgba(255,255,255,0.06) 0%, transparent 60%)",
+              filter: "blur(20px)",
+            }}
+            aria-hidden="true"
+          />
           <div
             ref={dragWrapperRef}
             style={{ transformStyle: "preserve-3d", cursor: "grab" }}
@@ -273,7 +297,7 @@ function Hero() {
                 top: "-2px",
                 width: "18px",
                 height: "424px",
-                background: "linear-gradient(90deg, #0f0f17 0%, #1c1c2a 30%, #16161f 60%, #0f0f17 100%)",
+                background: "linear-gradient(90deg, #0a0a1a 0%, #14142a 30%, #10101f 60%, #0a0a1a 100%)",
                 borderRadius: "6px 2px 2px 6px",
                 boxShadow: "inset 1px 0 2px rgba(255,255,255,0.02), -2px 0 8px rgba(0,0,0,0.5)",
               }}
@@ -318,8 +342,9 @@ function Hero() {
             <div
               className="absolute inset-0 overflow-hidden"
               style={{
-                background: "linear-gradient(160deg, #111113 0%, #0c0c0e 100%)",
+                background: "linear-gradient(160deg, #0a0a18 0%, #060612 100%)",
                 borderRadius: "2px 8px 8px 2px",
+                transform: "translateZ(4px)",
               }}
             >
               <div className="absolute left-0 top-0 bottom-0 w-8" style={{ background: "linear-gradient(90deg, rgba(0,0,0,0.2) 0%, transparent 100%)" }} />
@@ -338,6 +363,7 @@ function Hero() {
               style={{
                 transformOrigin: "left center",
                 transformStyle: "preserve-3d",
+                transform: "translateZ(5px)",
               }}
             >
               {/* Front: right page content */}
@@ -345,7 +371,7 @@ function Hero() {
                 className="absolute inset-0 overflow-hidden"
                 style={{
                   backfaceVisibility: "hidden",
-                  background: "linear-gradient(160deg, #111113 0%, #0c0c0e 100%)",
+                  background: "linear-gradient(160deg, #0a0a18 0%, #060612 100%)",
                   borderRadius: "2px 8px 8px 2px",
                   boxShadow: "inset 2px 0 8px rgba(0,0,0,0.3), 4px 4px 20px rgba(0,0,0,0.5)",
                 }}
@@ -390,7 +416,7 @@ function Hero() {
                       { label: "Streak", value: "12d" },
                     ].map((s) => (
                       <div key={s.label} className="text-center rounded-lg py-2" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
-                        <div className="text-xl font-bold text-white">{s.value}</div>
+                        <div className="text-xl font-bold text-zinc-900 dark:text-white">{s.value}</div>
                         <div className="text-[10px] text-zinc-500 uppercase tracking-wider mt-0.5">{s.label}</div>
                       </div>
                     ))}
@@ -406,7 +432,7 @@ function Hero() {
                         <div key={s.name} className="flex items-center gap-2 text-[12px] py-1 px-2 rounded" style={{ background: "rgba(255,255,255,0.02)" }}>
                           <div className="w-1.5 h-1.5 rounded-full bg-blue-500/60" />
                           <span className="text-zinc-300">{s.name}</span>
-                          <span className="ml-auto font-semibold text-white">{s.score}</span>
+                          <span className="ml-auto font-semibold text-zinc-900 dark:text-white">{s.score}</span>
                           {s.highlight && <TrendingUp className="w-3 h-3 text-emerald-400" />}
                         </div>
                       ))}
@@ -420,7 +446,7 @@ function Hero() {
                 style={{
                   backfaceVisibility: "hidden",
                   transform: "rotateY(180deg)",
-                  background: "linear-gradient(200deg, #111113 0%, #0c0c0e 100%)",
+                  background: "linear-gradient(200deg, #0a0a18 0%, #060612 100%)",
                   borderRadius: "8px 2px 2px 8px",
                 }}
               >
@@ -445,9 +471,9 @@ function Hero() {
                 className="absolute inset-0"
                 style={{
                   backfaceVisibility: "hidden",
-                  background: "linear-gradient(155deg, #1a1a2a 0%, #141420 30%, #18182a 60%, #121220 100%)",
+                  background: "linear-gradient(155deg, #16163a 0%, #0c0c1e 30%, #10102a 60%, #0a0a1e 100%)",
                   borderRadius: "2px 8px 8px 2px",
-                  boxShadow: "6px 6px 30px rgba(0,0,0,0.6), 2px 2px 8px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.02)",
+                  boxShadow: "8px 10px 40px rgba(0,0,0,0.7), 3px 3px 12px rgba(0,0,0,0.5), 0 0 80px rgba(59,130,246,0.06), inset 0 0 0 1px rgba(255,255,255,0.04)",
                 }}
               >
                 {/* Leather grain texture */}
@@ -495,48 +521,33 @@ function Hero() {
                   boxShadow: "0 2px 4px rgba(0,0,0,0.3)",
                 }} />
 
-                {/* DUZZ embossed text — debossed into leather */}
+                {/* DUZZ logo — embossed on cover */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="relative">
-                    {/* Deep shadow (deboss) */}
-                    <span
-                      className="absolute text-4xl font-black tracking-[0.3em]"
-                      style={{ color: "rgba(0,0,0,0.6)", transform: "translate(0.5px, 2px)" }}
-                      aria-hidden="true"
-                    >
-                      DUZZ
-                    </span>
-                    {/* Inner highlight */}
-                    <span
-                      className="absolute text-4xl font-black tracking-[0.3em]"
-                      style={{ color: "rgba(255,255,255,0.03)", transform: "translate(-0.5px, -0.5px)" }}
-                      aria-hidden="true"
-                    >
-                      DUZZ
-                    </span>
-                    {/* Metallic foil text */}
-                    <span
-                      className="relative text-4xl font-black tracking-[0.3em]"
-                      style={{
-                        background: "linear-gradient(170deg, #a0a0a8 0%, #d4d4d8 15%, #e8e8ec 30%, #a1a1aa 45%, #c8c8d0 55%, #71717a 70%, #a8a8b0 85%, #d4d4d8 100%)",
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        filter: "drop-shadow(0 1px 0 rgba(0,0,0,0.4))",
-                      }}
-                    >
-                      DUZZ
-                    </span>
-                  </div>
+                  <Image
+                    src="/duzz-logo.png"
+                    alt="DUZZ"
+                    width={120}
+                    height={120}
+                    className="opacity-40"
+                    style={{
+                      filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.5)) drop-shadow(0 0 20px rgba(59,130,246,0.1))",
+                    }}
+                  />
                 </div>
 
                 {/* Corner reinforcement patches */}
                 <div className="absolute bottom-3 right-3 w-5 h-5 border-r border-b border-white/[0.03] rounded-br-md" />
                 <div className="absolute top-3 right-3 w-5 h-5 border-r border-t border-white/[0.03] rounded-tr-md" />
 
-                {/* Subtle sheen highlight */}
+                {/* 3D shine / light reflection */}
                 <div className="absolute inset-0 pointer-events-none" style={{
-                  background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 40%, transparent 60%, rgba(255,255,255,0.01) 100%)",
+                  background: "linear-gradient(125deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 15%, transparent 40%, transparent 70%, rgba(59,130,246,0.04) 90%, rgba(59,130,246,0.08) 100%)",
                   borderRadius: "2px 8px 8px 2px",
+                }} />
+                {/* Edge highlight for 3D depth */}
+                <div className="absolute inset-0 pointer-events-none" style={{
+                  borderRadius: "2px 8px 8px 2px",
+                  boxShadow: "inset 1px 1px 0 rgba(255,255,255,0.06), inset 0 -1px 0 rgba(0,0,0,0.3), inset -1px 0 0 rgba(0,0,0,0.2)",
                 }} />
               </div>
 
@@ -546,7 +557,7 @@ function Hero() {
                 style={{
                   backfaceVisibility: "hidden",
                   transform: "rotateY(180deg)",
-                  background: "linear-gradient(200deg, #111113 0%, #0c0c0e 100%)",
+                  background: "linear-gradient(200deg, #0a0a18 0%, #060612 100%)",
                   borderRadius: "8px 2px 2px 8px",
                   boxShadow: "inset -2px 0 8px rgba(0,0,0,0.2)",
                 }}
@@ -669,15 +680,11 @@ function DeviceMockups() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative px-6 py-28 md:py-36">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-px bg-gradient-to-r from-transparent via-zinc-700/60 to-transparent" />
-
+    <section ref={sectionRef} className="relative px-6 py-32 md:py-44">
       <div className="mx-auto max-w-6xl">
-        <div className="reveal-item text-center mb-16">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-400 mb-4">
-            The Platform
-          </p>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">
+        <div className="reveal-item text-center mb-20">
+          <span className="section-badge mb-5 inline-flex">The Platform</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-bold text-zinc-900 dark:text-white leading-tight">
             Practice anywhere. Track everything.
           </h2>
         </div>
@@ -688,7 +695,7 @@ function DeviceMockups() {
             className="device-phone relative w-[240px] sm:w-[260px]"
             style={{ perspective: "1000px" }}
           >
-            <div className="relative rounded-[2.5rem] overflow-hidden border-[5px] border-zinc-800 bg-[#0a0a12] shadow-[0_30px_80px_-15px_rgba(0,0,0,0.7),0_0_40px_-10px_rgba(59,130,246,0.1)]">
+            <div className="relative rounded-[2.5rem] overflow-hidden border-[5px] border-zinc-300 dark:border-zinc-800 bg-[#080814] shadow-[0_30px_80px_-15px_rgba(0,0,0,0.3),0_0_40px_-10px_rgba(59,130,246,0.1)] dark:shadow-[0_30px_80px_-15px_rgba(0,0,0,0.7),0_0_40px_-10px_rgba(59,130,246,0.1)]">
               <div className="absolute top-2 left-1/2 -translate-x-1/2 w-[80px] h-[22px] bg-black rounded-full z-20" />
               <div className="pt-10 pb-5 px-4 space-y-3">
                 <div className="flex items-center gap-2 mb-2">
@@ -707,7 +714,7 @@ function DeviceMockups() {
                       fillOpacity="0.95"
                     />
                   </svg>
-                  <span className="text-xs font-bold text-white">DUZZ</span>
+                  <span className="text-xs font-bold text-zinc-900 dark:text-white">DUZZ</span>
                 </div>
 
                 <div className="relative w-20 h-20 mx-auto flex items-center justify-center">
@@ -760,7 +767,7 @@ function DeviceMockups() {
                       className="rounded-lg bg-white/[0.03] border border-white/[0.04] p-1.5 text-center"
                     >
                       <div className="text-[8px] text-zinc-500">{s.label}</div>
-                      <div className="text-sm font-bold text-white">
+                      <div className="text-sm font-bold text-zinc-900 dark:text-white">
                         {s.value}
                       </div>
                     </div>
@@ -789,7 +796,7 @@ function DeviceMockups() {
                       <div className="w-1.5 h-1.5 rounded-full bg-blue-400" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-[10px] font-semibold text-white">
+                      <div className="text-[10px] font-semibold text-zinc-900 dark:text-white">
                         {item.name}
                       </div>
                       <div className="text-[8px] text-zinc-500">
@@ -812,7 +819,7 @@ function DeviceMockups() {
             className="device-laptop w-[380px] sm:w-[460px]"
             style={{ perspective: "1000px" }}
           >
-            <div className="rounded-t-xl overflow-hidden border-[3px] border-zinc-700 bg-[#0a0a12]">
+            <div className="rounded-t-xl overflow-hidden border-[3px] border-zinc-300 dark:border-zinc-700 bg-[#080814]">
               <div className="flex items-center gap-1.5 px-3 py-2 bg-zinc-900/80 border-b border-zinc-800">
                 <div className="w-2 h-2 rounded-full bg-red-500/50" />
                 <div className="w-2 h-2 rounded-full bg-yellow-500/50" />
@@ -845,7 +852,7 @@ function DeviceMockups() {
                         fillOpacity="0.95"
                       />
                     </svg>
-                    <span className="text-xs font-bold text-white">
+                    <span className="text-xs font-bold text-zinc-900 dark:text-white">
                       Dashboard
                     </span>
                   </div>
@@ -926,11 +933,11 @@ function DeviceMockups() {
             </div>
             {/* Laptop base */}
             <div
-              className="mx-auto h-2.5 bg-zinc-700 rounded-b-xl"
+              className="mx-auto h-2.5 bg-zinc-300 dark:bg-zinc-700 rounded-b-xl"
               style={{ width: "105%" }}
             />
             <div
-              className="mx-auto h-1 bg-zinc-800 rounded-b-lg"
+              className="mx-auto h-1 bg-zinc-400 dark:bg-zinc-800 rounded-b-lg"
               style={{ width: "40%" }}
             />
           </div>
@@ -992,30 +999,26 @@ function Problem() {
   ];
 
   return (
-    <section ref={sectionRef} className="relative px-6 py-28 md:py-36">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-px bg-gradient-to-r from-transparent via-zinc-700/60 to-transparent" />
-
+    <section ref={sectionRef} className="relative px-6 py-32 md:py-44">
       <div className="mx-auto max-w-4xl">
         <div className="reveal-item text-center mb-16">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-400 mb-4">
-            The Problem
-          </p>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight">
+          <span className="section-badge mb-5 inline-flex">The Problem</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-bold text-zinc-900 dark:text-white leading-tight">
             DECA prep is broken.
           </h2>
         </div>
 
-        <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
+        <div className="grid sm:grid-cols-2 gap-px max-w-3xl mx-auto rounded-2xl overflow-hidden border border-zinc-200 dark:border-white/[0.06] bg-zinc-200 dark:bg-white/[0.06]">
           {problems.map((p, i) => (
             <div
               key={i}
-              className="reveal-item p-5 rounded-xl bg-white/[0.02] border border-white/[0.04]"
+              className="reveal-item p-6 bg-white dark:bg-[#050510]"
             >
-              <div className="mb-3">{p.icon}</div>
-              <h3 className="text-sm font-semibold text-white mb-1">
+              <div className="mb-3 text-zinc-400 dark:text-zinc-500">{p.icon}</div>
+              <h3 className="text-sm font-semibold text-zinc-900 dark:text-white mb-1">
                 {p.title}
               </h3>
-              <p className="text-sm text-zinc-500 leading-relaxed">{p.desc}</p>
+              <p className="text-sm text-zinc-500 dark:text-[rgba(255,255,255,0.45)] leading-relaxed">{p.desc}</p>
             </div>
           ))}
         </div>
@@ -1053,82 +1056,40 @@ function Solutions() {
   }, []);
 
   const items = [
-    {
-      icon: <Mic className="w-5 h-5 text-zinc-500" />,
-      title: "AI Roleplay",
-      desc: "Practice with adaptive AI judges, scored instantly.",
-    },
-    {
-      icon: <FileText className="w-5 h-5 text-zinc-500" />,
-      title: "Project Builder",
-      desc: "Guided frameworks for written events and plans.",
-    },
-    {
-      icon: <Clock className="w-5 h-5 text-zinc-500" />,
-      title: "Practice Exams",
-      desc: "Timed tests modeled after real DECA exams.",
-    },
-    {
-      icon: <BarChart3 className="w-5 h-5 text-zinc-500" />,
-      title: "Analytics",
-      desc: "Track progress across events and sessions.",
-    },
-    {
-      icon: <Target className="w-5 h-5 text-zinc-500" />,
-      title: "Event-Specific",
-      desc: "Every session tailored to your chosen event.",
-    },
-    {
-      icon: <Zap className="w-5 h-5 text-zinc-500" />,
-      title: "Instant Scoring",
-      desc: "Detailed breakdowns seconds after each session.",
-    },
-    {
-      icon: <TrendingUp className="w-5 h-5 text-zinc-500" />,
-      title: "Progress Tracking",
-      desc: "Visual dashboards showing improvement over time.",
-    },
-    {
-      icon: <Users className="w-5 h-5 text-zinc-500" />,
-      title: "By Competitors",
-      desc: "Created by DECA students who know what it takes.",
-    },
+    { icon: <Mic className="w-5 h-5" />, title: "AI Roleplay" },
+    { icon: <FileText className="w-5 h-5" />, title: "Project Builder" },
+    { icon: <Clock className="w-5 h-5" />, title: "Practice Exams" },
+    { icon: <BarChart3 className="w-5 h-5" />, title: "Analytics" },
+    { icon: <Target className="w-5 h-5" />, title: "Event-Specific" },
+    { icon: <Zap className="w-5 h-5" />, title: "Instant Scoring" },
   ];
 
   return (
     <section
       ref={sectionRef}
       id="features"
-      className="relative px-6 py-28 md:py-36"
+      className="relative px-6 py-32 md:py-44"
     >
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-px bg-gradient-to-r from-transparent via-zinc-700/60 to-transparent" />
-
-      <div className="mx-auto max-w-5xl">
-        <div className="text-center mb-16">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-400 mb-4">
-            Features
-          </p>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
+      <div className="mx-auto max-w-3xl">
+        <div className="text-center mb-14">
+          <span className="section-badge mb-5 inline-flex">Features</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-bold text-zinc-900 dark:text-white">
             Everything you need to win.
           </h2>
-          <p className="text-zinc-400 text-lg max-w-lg mx-auto">
-            One platform. AI-powered. Built specifically for DECA.
-          </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-px rounded-2xl overflow-hidden border border-zinc-200 dark:border-white/[0.06] bg-zinc-200 dark:bg-white/[0.06]">
           {items.map((item, i) => (
             <div
               key={i}
-              className="feature-box p-5 rounded-xl bg-white/[0.02] border border-white/[0.04] transition-colors hover:bg-white/[0.04]"
+              className="feature-box group flex flex-col items-center gap-3 py-10 bg-white dark:bg-[#050510] transition-colors hover:bg-zinc-50 dark:hover:bg-white/[0.02]"
             >
-              <div className="mb-3">{item.icon}</div>
-              <h3 className="text-sm font-semibold text-white mb-1">
+              <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-blue-500/10 text-blue-500 transition-transform group-hover:scale-110">
+                {item.icon}
+              </div>
+              <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
                 {item.title}
               </h3>
-              <p className="text-sm text-zinc-500 leading-relaxed">
-                {item.desc}
-              </p>
             </div>
           ))}
         </div>
@@ -1206,34 +1167,30 @@ function HowItWorks() {
     <section
       ref={sectionRef}
       id="how-it-works"
-      className="relative px-6 py-28 md:py-36"
+      className="relative px-6 py-32 md:py-44"
     >
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-px bg-gradient-to-r from-transparent via-zinc-700/60 to-transparent" />
-
       <div className="mx-auto max-w-5xl">
-        <div className="text-center mb-16">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-400 mb-4">
-            How It Works
-          </p>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">
+        <div className="text-center mb-20">
+          <span className="section-badge mb-5 inline-flex">How It Works</span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-bold text-zinc-900 dark:text-white">
             Three steps to DECA dominance.
           </h2>
         </div>
 
         <div className="relative">
-          <div className="connect-line hidden md:block absolute top-[3.25rem] left-[16%] right-[16%] h-px bg-gradient-to-r from-blue-500/40 via-blue-400/20 to-blue-500/40 origin-left" />
+          <div className="connect-line hidden md:block absolute top-[3.25rem] left-[16%] right-[16%] h-px bg-gradient-to-r from-blue-500/20 via-blue-400/10 to-blue-500/20 origin-left" />
 
           <div className="grid md:grid-cols-3 gap-12 md:gap-8">
             {steps.map((s) => (
               <div key={s.num} className="step-item text-center">
-                <div className="relative inline-flex items-center justify-center w-16 h-16 mb-6">
-                  <div className="absolute inset-0 rounded-full bg-white/[0.02] border border-white/[0.06]" />
-                  <span className="relative text-zinc-400">{s.icon}</span>
+                <div className="relative inline-flex items-center justify-center w-16 h-16 mb-8">
+                  <div className="absolute inset-0 rounded-full bg-zinc-50 dark:bg-white/[0.02] border border-zinc-200 dark:border-white/[0.06]" />
+                  <span className="relative text-zinc-500 dark:text-zinc-400">{s.icon}</span>
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-3">
+                <h3 className="text-2xl font-bold text-zinc-900 dark:text-white mb-3">
                   {s.title}
                 </h3>
-                <p className="text-zinc-400 leading-relaxed max-w-xs mx-auto">
+                <p className="text-zinc-500 dark:text-[rgba(255,255,255,0.5)] leading-relaxed max-w-xs mx-auto">
                   {s.desc}
                 </p>
               </div>
@@ -1272,18 +1229,14 @@ function GlobeSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative px-6 py-20 md:py-28">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-px bg-gradient-to-r from-transparent via-zinc-700/60 to-transparent" />
-
+    <section ref={sectionRef} className="relative px-6 py-32 md:py-44">
       <div className="globe-content mx-auto max-w-5xl flex flex-col md:flex-row items-center gap-10 md:gap-16">
         <div className="flex-1 text-center md:text-left">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-400 mb-4">
-            Global Reach
-          </p>
-          <h2 className="text-3xl sm:text-4xl font-bold text-white leading-tight mb-4">
+          <span className="section-badge mb-5 inline-flex">Global Reach</span>
+          <h2 className="text-3xl sm:text-4xl md:text-[2.75rem] font-bold text-zinc-900 dark:text-white leading-tight mb-5">
             DECA competitors everywhere.
           </h2>
-          <p className="text-zinc-400 text-lg leading-relaxed max-w-md mx-auto md:mx-0">
+          <p className="text-zinc-500 dark:text-[rgba(255,255,255,0.5)] text-lg leading-relaxed max-w-md mx-auto md:mx-0">
             From chapter meetings to ICDC, DUZZ trains students across every
             region and competition level.
           </p>
@@ -1304,89 +1257,215 @@ function GlobeSection() {
   );
 }
 
+// ─── Marquee Bar ─────────────────────────────────────────────────────────────
+
+function MarqueeBar() {
+  const items = [
+    "State Champions",
+    "ICDC Finalists",
+    "AI Roleplay",
+    "Instant Scoring",
+    "Practice Exams",
+    "Event-Specific",
+    "Progress Tracking",
+    "98th Percentile",
+    "500+ Students",
+    "15+ Events",
+  ];
+
+  return (
+    <div className="relative py-5 overflow-hidden border-y border-zinc-200 dark:border-white/[0.06] bg-zinc-50/50 dark:bg-white/[0.01]">
+      <div className="flex animate-marquee whitespace-nowrap">
+        {[...items, ...items, ...items].map((item, i) => (
+          <span key={i} className="flex items-center gap-6 mx-6">
+            <span className="text-sm font-semibold uppercase tracking-widest text-zinc-400 dark:text-[rgba(255,255,255,0.3)]">
+              {item}
+            </span>
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-500/40" />
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── Testimonials Column ─────────────────────────────────────────────────────
+
+function TestimonialsColumn({ items, duration = 15, className }: { items: typeof testimonials; duration?: number; className?: string }) {
+  return (
+    <div className={className}>
+      <motion.div
+        animate={{ translateY: "-50%" }}
+        transition={{ duration, repeat: Infinity, ease: "linear", repeatType: "loop" }}
+        className="flex flex-col gap-5 pb-5"
+      >
+        {[0, 1].map((copy) => (
+          <React.Fragment key={copy}>
+            {items.map((t, i) => (
+              <div
+                key={`${copy}-${i}`}
+                className="p-6 rounded-2xl border border-zinc-200 dark:border-white/[0.06] bg-white dark:bg-white/[0.02] max-w-xs w-full backdrop-blur-sm hover:border-blue-500/20 dark:hover:border-blue-500/20 transition-colors duration-300"
+              >
+                <p className="text-sm text-zinc-600 dark:text-[rgba(255,255,255,0.6)] leading-relaxed">{t.text}</p>
+                <div className="flex items-center gap-3 mt-5">
+                  <img
+                    width={36}
+                    height={36}
+                    src={t.image}
+                    alt={t.name}
+                    className="w-9 h-9 rounded-full object-cover bg-zinc-100 dark:bg-white/[0.05]"
+                  />
+                  <div>
+                    <div className="text-sm font-medium text-zinc-900 dark:text-white leading-tight">{t.name}</div>
+                    <div className="text-xs text-zinc-400 dark:text-[rgba(255,255,255,0.35)] leading-tight">{t.role}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </React.Fragment>
+        ))}
+      </motion.div>
+    </div>
+  );
+}
+
 // ─── Social Proof ────────────────────────────────────────────────────────────
 
+const firstCol = testimonials.slice(0, 4);
+const secondCol = testimonials.slice(4, 8);
+const thirdCol = testimonials.slice(8, 12);
+
 function SocialProof() {
+  return (
+    <section className="relative py-32 md:py-44 overflow-hidden">
+      <div className="mx-auto max-w-5xl px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <span className="section-badge mb-5 inline-flex">Testimonials</span>
+          <h2 className="text-3xl sm:text-4xl md:text-[2.75rem] font-bold text-zinc-900 dark:text-white">
+            Students love DUZZ.
+          </h2>
+          <p className="text-zinc-500 dark:text-[rgba(255,255,255,0.5)] mt-4 text-[15px] max-w-md mx-auto">
+            Join thousands of DECA competitors who&apos;ve transformed their preparation and won competitions.
+          </p>
+        </motion.div>
+
+        <div className="flex justify-center gap-5 [mask-image:linear-gradient(to_bottom,transparent,black_12%,black_88%,transparent)] max-h-[700px] overflow-hidden">
+          <TestimonialsColumn items={firstCol} duration={16} />
+          <TestimonialsColumn items={secondCol} duration={20} className="hidden md:block" />
+          <TestimonialsColumn items={thirdCol} duration={18} className="hidden lg:block" />
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true }}
+          className="flex justify-center items-center gap-8 mt-16 pt-8 border-t border-zinc-200 dark:border-white/[0.06]"
+        >
+          <div className="text-center">
+            <div className="text-2xl font-bold text-blue-500">4.9/5</div>
+            <div className="text-[11px] text-zinc-400 dark:text-[rgba(255,255,255,0.35)] uppercase tracking-widest">Avg Rating</div>
+          </div>
+          <div className="w-px h-8 bg-zinc-200 dark:bg-white/[0.06]" />
+          <div className="text-center">
+            <div className="text-2xl font-bold text-blue-500">12,400+</div>
+            <div className="text-[11px] text-zinc-400 dark:text-[rgba(255,255,255,0.35)] uppercase tracking-widest">Happy Students</div>
+          </div>
+          <div className="w-px h-8 bg-zinc-200 dark:bg-white/[0.06] hidden sm:block" />
+          <div className="text-center hidden sm:block">
+            <div className="text-2xl font-bold text-blue-500">340+</div>
+            <div className="text-[11px] text-zinc-400 dark:text-[rgba(255,255,255,0.35)] uppercase tracking-widest">Competition Wins</div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Robot Section ───────────────────────────────────────────────────────────
+
+function RobotSection() {
+  const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.utils.toArray<HTMLElement>(".quote-item").forEach((el, i) => {
-        gsap.fromTo(
-          el,
-          { y: 30, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.7,
-            delay: i * 0.15,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: el,
-              start: "top 85%",
-              toggleActions: "play none none none",
-            },
-          }
-        );
-      });
-    }, sectionRef);
-    return () => ctx.revert();
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setIsVisible(true); },
+      { threshold: 0.2 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative px-6 py-28 md:py-36">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-px bg-gradient-to-r from-transparent via-zinc-700/60 to-transparent" />
+    <section ref={sectionRef} className="relative px-6 py-32 md:py-44 overflow-hidden">
+      <div className="mx-auto max-w-6xl flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+        {/* Robot */}
+        <motion.div
+          className="relative flex-1 flex justify-center"
+          initial={{ opacity: 0, y: 60 }}
+          animate={isVisible ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <div className="relative">
+            {/* Glow behind robot */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: "radial-gradient(ellipse at center, rgba(59,130,246,0.08) 0%, transparent 70%)",
+                filter: "blur(40px)",
+                transform: "scale(1.5)",
+              }}
+            />
+            <motion.div
+              animate={{ rotate: [-0.5, 0.5, -0.5] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <Image
+                src="/humanoid-nex.png"
+                alt="DUZZ AI Assistant"
+                width={380}
+                height={570}
+                className="relative object-contain drop-shadow-[0_0_40px_rgba(59,130,246,0.15)] dark:drop-shadow-[0_0_60px_rgba(59,130,246,0.2)]"
+                priority
+              />
+            </motion.div>
+          </div>
+        </motion.div>
 
-      <div className="mx-auto max-w-4xl">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-400 mb-6 text-center">
-          Built by Competitors
-        </p>
-        <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-14">
-          Made by DECA students, for DECA students.
-        </h2>
-
-        <div className="grid sm:grid-cols-2 gap-12">
-          {[
-            {
-              quote:
-                "I wish I had something like this when I was preparing for ICDC. The roleplay practice alone would have changed everything.",
-              name: "DECA Alum",
-              role: "ICDC Qualifier",
-              initials: "DA",
-            },
-            {
-              quote:
-                "Finally, a platform that actually understands what DECA competitors need. Not just flashcards — real practice.",
-              name: "Chapter President",
-              role: "State Finalist",
-              initials: "CP",
-            },
-          ].map((t, i) => (
-            <div key={i} className="quote-item">
-              <svg
-                className="w-8 h-8 text-blue-500/20 mb-4"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10H0z" />
-              </svg>
-              <blockquote className="text-zinc-300 leading-relaxed mb-6 text-[15px]">
-                {t.quote}
-              </blockquote>
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-xs font-bold text-blue-400">
-                  {t.initials}
-                </div>
-                <div>
-                  <div className="text-sm font-medium text-white">
-                    {t.name}
-                  </div>
-                  <div className="text-xs text-zinc-500">{t.role}</div>
-                </div>
+        {/* Text */}
+        <motion.div
+          className="flex-1 text-center lg:text-left"
+          initial={{ opacity: 0, y: 40 }}
+          animate={isVisible ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <span className="section-badge mb-5 inline-flex">Meet Your AI Coach</span>
+          <h2 className="text-3xl sm:text-4xl md:text-[2.75rem] font-bold text-zinc-900 dark:text-white leading-tight mb-5">
+            Your personal DECA training partner.
+          </h2>
+          <p className="text-zinc-500 dark:text-[rgba(255,255,255,0.5)] text-lg leading-relaxed max-w-md mx-auto lg:mx-0 mb-8">
+            Powered by AI that understands DECA inside and out. Practice roleplays, get instant feedback, and build the confidence to win.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            {[
+              { label: "Adaptive AI judge", icon: <Target className="w-4 h-4" /> },
+              { label: "Real-time feedback", icon: <Zap className="w-4 h-4" /> },
+              { label: "Personalized coaching", icon: <TrendingUp className="w-4 h-4" /> },
+            ].map((f) => (
+              <div key={f.label} className="flex items-center gap-2 text-sm text-zinc-600 dark:text-[rgba(255,255,255,0.5)]">
+                <div className="text-blue-500">{f.icon}</div>
+                {f.label}
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -1422,23 +1501,22 @@ function FinalCTA() {
     <section
       ref={sectionRef}
       id="waitlist-section"
-      className="relative px-6 py-28 md:py-36"
+      className="relative px-6 py-32 md:py-44"
     >
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-px bg-gradient-to-r from-transparent via-zinc-700/60 to-transparent" />
-
       <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] pointer-events-none"
+        className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[400px] pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse, rgba(59,130,246,0.06) 0%, transparent 70%)",
+            "radial-gradient(ellipse, rgba(59,130,246,0.05) 0%, transparent 70%)",
         }}
         aria-hidden="true"
       />
       <div className="cta-content relative mx-auto max-w-2xl text-center">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
+        <span className="section-badge mb-6 inline-flex">Get Started</span>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-bold text-zinc-900 dark:text-white mb-5">
           Ready to start winning?
         </h2>
-        <p className="text-zinc-400 mb-10 text-lg">
+        <p className="text-zinc-500 dark:text-[rgba(255,255,255,0.5)] mb-12 text-lg max-w-lg mx-auto">
           Join the waitlist and be first to access the platform that&apos;s
           changing how students prepare for DECA.
         </p>
@@ -1452,30 +1530,30 @@ function FinalCTA() {
 
 function Footer() {
   return (
-    <footer className="border-t border-zinc-800/40 px-6 py-12">
+    <footer className="border-t border-zinc-200/60 dark:border-white/[0.06] px-6 py-14">
       <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-6 sm:flex-row">
         <Logo size="sm" showIcon={false} />
-        <div className="flex items-center gap-6 text-xs text-zinc-500">
+        <div className="flex items-center gap-8 text-[13px] text-zinc-400 dark:text-[rgba(255,255,255,0.4)]">
           <a
             href="#features"
-            className="transition-colors hover:text-zinc-300"
+            className="transition-colors hover:text-zinc-900 dark:hover:text-white"
           >
             Features
           </a>
           <a
             href="#how-it-works"
-            className="transition-colors hover:text-zinc-300"
+            className="transition-colors hover:text-zinc-900 dark:hover:text-white"
           >
             How It Works
           </a>
           <a
-            href="#waitlist-section"
-            className="transition-colors hover:text-zinc-300"
+            href="/waitlist"
+            className="transition-colors hover:text-zinc-900 dark:hover:text-white"
           >
             Waitlist
           </a>
         </div>
-        <div className="text-xs text-zinc-600">
+        <div className="text-[13px] text-zinc-400 dark:text-[rgba(255,255,255,0.3)]">
           &copy; {new Date().getFullYear()} DUZZ. All rights reserved.
         </div>
       </div>
@@ -1492,6 +1570,7 @@ export default function Home() {
       <Navbar />
       <main style={{ overflowX: "clip" }}>
         <Hero />
+        <MarqueeBar />
         <DeviceMockups />
         <Problem />
         <Solutions />

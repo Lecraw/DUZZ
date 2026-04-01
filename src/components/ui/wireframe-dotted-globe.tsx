@@ -135,7 +135,8 @@ export default function RotatingGlobe({
         0,
         2 * Math.PI
       );
-      context.fillStyle = "rgba(9, 9, 11, 0.8)";
+      const isDark = document.documentElement.classList.contains("dark");
+      context.fillStyle = isDark ? "rgba(5, 5, 16, 0.8)" : "rgba(241, 245, 249, 0.8)";
       context.fill();
       context.strokeStyle = "rgba(59, 130, 246, 0.3)";
       context.lineWidth = 1.5 * scaleFactor;

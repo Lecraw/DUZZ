@@ -6,6 +6,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --animate-star-btn: star-btn calc(var(--duration)*1s) linear infinite;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
@@ -37,25 +38,46 @@
 }
 
 :root {
-  --background: #09090b;
+  --background: #ffffff;
+  --foreground: #09090b;
+  --card: #f4f4f5;
+  --card-foreground: #09090b;
+  --popover: #ffffff;
+  --popover-foreground: #09090b;
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --accent: #dbeafe;
+  --accent-foreground: #1e3a5f;
+  --destructive: #ef4444;
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --ring: #3b82f6;
+  --radius: 0.625rem;
+}
+
+.dark {
+  --background: #050510;
   --foreground: #fafafa;
-  --card: #111113;
+  --card: #0a0a18;
   --card-foreground: #fafafa;
-  --popover: #111113;
+  --popover: #0a0a18;
   --popover-foreground: #fafafa;
   --primary: #3b82f6;
   --primary-foreground: #ffffff;
-  --secondary: #18181b;
+  --secondary: #12121e;
   --secondary-foreground: #fafafa;
-  --muted: #18181b;
+  --muted: #12121e;
   --muted-foreground: #71717a;
   --accent: #1e3a5f;
   --accent-foreground: #fafafa;
   --destructive: #ef4444;
-  --border: #27272a;
-  --input: #27272a;
+  --border: #1e1e2e;
+  --input: #1e1e2e;
   --ring: #3b82f6;
-  --radius: 0.625rem;
 }
 
 @layer base {
@@ -68,6 +90,50 @@
   html {
     @apply font-sans scroll-smooth;
   }
+}
+
+@keyframes star-btn {
+  0% {
+    offset-distance: 0%;
+  }
+  100% {
+    offset-distance: 100%;
+  }
+}
+
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px 5px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  background: rgba(59, 130, 246, 0.06);
+  color: #60a5fa;
+}
+.dark .section-badge {
+  border-color: rgba(59, 130, 246, 0.2);
+  background: rgba(59, 130, 246, 0.08);
+  box-shadow: inset 0 -4px 8px rgba(59, 130, 246, 0.06);
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.333%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
 }
 
 @keyframes fadeInUp {
