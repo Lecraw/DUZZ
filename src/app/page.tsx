@@ -1532,7 +1532,7 @@ function Footer() {
   return (
     <footer className="border-t border-zinc-200/60 dark:border-white/[0.06] px-6 py-14">
       <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-6 sm:flex-row">
-        <Logo size="sm" showIcon={false} />
+        <Logo size="sm" />
         <div className="flex items-center gap-8 text-[13px] text-zinc-400 dark:text-[rgba(255,255,255,0.4)]">
           <a
             href="#features"
