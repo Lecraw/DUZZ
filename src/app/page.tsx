@@ -25,6 +25,7 @@ import { Navbar } from "@/components/navbar";
 import { WaitlistForm } from "@/components/waitlist-form";
 import { Logo } from "@/components/logo";
 import { StarButton } from "@/components/ui/star-button";
+import { FloatingPaths } from "@/components/ui/background-paths";
 import { testimonials } from "@/lib/testimonials-data";
 
 const RotatingGlobe = dynamic(
@@ -193,6 +194,11 @@ function Hero() {
       ref={sectionRef}
       className="relative min-h-screen flex items-center overflow-hidden"
     >
+      {/* Animated background paths */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <FloatingPaths position={1} />
+        <FloatingPaths position={-1} />
+      </div>
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center gap-12 md:gap-20 pt-24 pb-12">
         {/* Left: Text */}
